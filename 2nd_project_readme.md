@@ -5,10 +5,10 @@
 - second-demo-dev  
 
 2. npm run dev  
-works without error    
+- works without error    
 
-3. follow typescript rule
-Yes!
+3. follow typescript rule  
+- Yes!
 
 4. url validation test Works
 - Axios used
@@ -25,6 +25,9 @@ result : Request failed with status code 404
 
 6. Screenshot
   
+<p align ="center"> 
+  <img src = "https://github.com/sijoonlee/udacity-cloud-developer/blob/master/image-filter-starter-code/deployment_screenshots/Screenshot.jpg?raw=true" width = "600"/> 
+</p>
 
 7. Validation Test  
 
