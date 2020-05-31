@@ -48,7 +48,7 @@ import axios from 'axios';
         throw new Error("Provide valid query!")
       }
     } catch (err) {
-      res.send(err.message)
+      res.status(422).send(err.message)
     }
 
   });
@@ -57,7 +57,7 @@ import axios from 'axios';
     try {
       res.locals.filtered_image = await filterImageFromURL(req.query.image_url)
       console.log("send file!")
-      res.sendFile(res.locals.filtered_image);
+      res.status(200).sendFile(res.locals.filtered_image);
       res.on("finish", () => {
         console.log("delete file!")
         deleteLocalFiles([res.locals.filtered_image]);
