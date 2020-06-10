@@ -1,25 +1,19 @@
-Tasks
+# Tasks
 1. Refactor the API
 Done!
 
 2. Containerize the Code
-DockerHub
+[DockerHub Screenshot](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/dockerhub)
 
 3. Build CICD Pipeline
-Travis CI
+[Travis CI Screenshot](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/travis)
+[Travis yaml](https://github.com/sijoonlee/udacity-cloud-developer/blob/master/.travis.yml)
 
 4. Deploy to Kubernetes
-kubectl get pods
-
-kubectl describe services
-
-kubectl describe hpa
-
+[kubectl get pods](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/pods)
+[kubectl describe services](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/services)
+[kubectl describe hpa](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/hpa)
 
 5. Logging
-Use logs to capture metrics. This can help us with debugging.
+[Logs](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/logs)
 
-Screenshots
-To verify that user activity is logged, please include a screenshot of:
-
-kubectl logs <your pod name>
