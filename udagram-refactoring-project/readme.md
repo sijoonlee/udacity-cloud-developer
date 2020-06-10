@@ -4,7 +4,7 @@
 [user](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/udagram-user)  
 
 2. Containerize the Code  
-[DockerHub Screenshot](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/dockerhub)
+[DockerHub Screenshot](https://github.com/sijoonlee/udacity-cloud-developer/tree/master/udagram-refactoring-project/screenshots/dockerhub)  
 [DockerHub Link](https://hub.docker.com/search?q=sijoonlee&type=image)  
 
 3. Build CICD Pipeline   
