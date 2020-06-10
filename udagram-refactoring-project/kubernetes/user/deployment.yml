@@ -1,0 +1,76 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    service: endpoint-user
+  name: endpoint-user
+  
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      service: endpoint-user
+  template:
+    metadata:
+      labels:
+        service: endpoint-user
+    spec:
+      containers:
+      - name: endpoint-user
+        image: sijoonlee/endpoint-user
+        resources:
+          requests:
+            memory: "64Mi"
+            cpu: "240m"
+          limits:
+            memory: "1024Mi"
+            cpu: "500m"
+        ports:
+        - containerPort: 8080
+        env:
+        - name: POSTGRES_USERNAME
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: POSTGRES_USERNAME
+        - name: POSTGRES_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: POSTGRES_PASSWORD
+        - name: POSTGRES_HOST
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: POSTGRES_HOST
+        - name: POSTGRES_DB
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: POSTGRES_DB
+        - name: AWS_BUCKET
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: AWS_BUCKET
+        - name: AWS_REGION
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: AWS_REGION
+        - name: AWS_PROFILE
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: AWS_PROFILE
+        - name: JWT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: JWT_SECRET        
+        - name: URL
+          valueFrom:
+            secretKeyRef:
+              name: udacity-project-secret-5dkkmd6mb6
+              key: URL
+      restartPolicy: Always
