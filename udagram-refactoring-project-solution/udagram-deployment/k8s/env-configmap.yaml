@@ -1,0 +1,13 @@
+apiVersion: v1
+kind: ConfigMap
+data:
+  AWS_BUCKET: arn:aws:s3:::sijoonlee-udacity-refactoring-project
+  AWS_PROFILE: default
+  AWS_REGION: ca-central-1
+  JWT_SECRET: my_secret_is_secret
+  POSTGRES_DB: test
+  POSTGRES_HOST: database-2.cqu9bstlxnqq.ca-central-1.rds.amazonaws.com
+  URL: *
+metadata:
+  name: env-config
+  
