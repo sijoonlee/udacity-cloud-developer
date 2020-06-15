@@ -29,22 +29,22 @@ spec:
         - name: URL
           valueFrom:
             configMapKeyRef:
-              name: env-config-fb29k8kkkg
+              name: env-config-7kffc5ctdf
               key: URL 
         - name: JWT_SECRET
           valueFrom:
             configMapKeyRef:
-              name: env-config-fb29k8kkkg
+              name: env-config-7kffc5ctdf
               key: JWT_SECRET
         - name: POSTGRES_DB
           valueFrom:
             configMapKeyRef:
-              name: env-config-fb29k8kkkg
+              name: env-config-7kffc5ctdf
               key: POSTGRES_DB
         - name: POSTGRES_HOST
           valueFrom:
             configMapKeyRef:
-              name: env-config-fb29k8kkkg
+              name: env-config-7kffc5ctdf
               key: POSTGRES_HOST
         - name: POSTGRES_PASSWORD
           valueFrom:
