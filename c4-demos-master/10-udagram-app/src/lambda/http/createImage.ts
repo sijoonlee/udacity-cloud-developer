@@ -27,6 +27,10 @@ export const handler = middy(async (event: APIGatewayProxyEvent): Promise<APIGat
   if (!validGroupId) {
     return {
       statusCode: 404,
+      // headers:{
+      //   'Access-Control-Allow-Origin':'*',
+      //   'Access-Control-Allow-Credentials': true
+      // }, it is not needed since we have handler.use(cors())
       body: JSON.stringify({
         error: 'Group does not exist'
       })

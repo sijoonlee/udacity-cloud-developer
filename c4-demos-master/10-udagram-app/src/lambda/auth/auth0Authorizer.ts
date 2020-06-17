@@ -74,3 +74,39 @@ handler.use(
     }
   })
 )
+
+
+/* middy middleware
+import * from middy from 'middy'
+import {cors} from 'middy/middlewares'
+
+export const handler = middy(
+  async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
+    ....
+  }
+)
+
+handler
+  .use(cors())
+
+it has before method, and after method
+{
+  before: (handler, next) => {
+    // process handler.event
+    return next()
+  },
+  after: (handler, next) => {
+    // process handler.event
+    next()
+  }
+}
+
+request ===> middleware 1 before -> middleware 2 before -> lambda handler -> middleware 2 after -> middleware 1 after
+
+available middleware
+  - cors, httpErrorHandler, secretManager, ssm, validator
+
+github.com/middyjs/middy
+
+
+*/
