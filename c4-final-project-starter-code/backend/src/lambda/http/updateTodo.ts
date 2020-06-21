@@ -4,8 +4,11 @@ import { UpdateTodoRequest } from '../../requests/UpdateTodoRequest'
 import { updateTodoById } from '../../businessLogic/Todos'
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
-  
-  const updateTodoRequest: UpdateTodoRequest = JSON.parse(event.body)
+  const body = JSON.parse(event.body)
+  const updateTodoRequest:UpdateTodoRequest = { 
+    todoId : event.pathParameters.todoId,  
+    ...body
+  }
   const authorization = event.headers.Authorization
   const split = authorization.split(' ')
   const jwtToken = split[1]

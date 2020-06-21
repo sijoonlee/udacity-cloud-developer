@@ -34,13 +34,8 @@ export async function getTodosByUserId(jwtToken: string): Promise<TodoItem[]> {
 export async function updateTodoById(
   updateTodoRequest: UpdateTodoRequest, jwtToken:string): Promise<TodoUpdate> {
   
-  const updatedTodo = {
-    todoName: updateTodoRequest.todoName,
-    dueDate: updateTodoRequest.dueDate,
-    done: updateTodoRequest.done
-  }
   const userId = parseUserId(jwtToken)
-  return await todoAccess.updateTodoById(updatedTodo, updateTodoRequest.todoId, userId)
+  return await todoAccess.updateTodoById(updateTodoRequest, userId)
 }
 
 export async function deleteTodoById(

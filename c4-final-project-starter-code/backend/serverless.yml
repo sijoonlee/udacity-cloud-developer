@@ -21,7 +21,7 @@ provider:
     USER_ID_INDEX: UserIdIndex
     IMAGES_S3_BUCKET: sijoonlee-serverless-todos-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    AUTH_0_SECRET_ID: Auth0Secret-TodoApp-test5-${self:provider.stage}
+    AUTH_0_SECRET_ID: Auth0Secret-TodoApp-test9-${self:provider.stage}
     AUTH_0_SECRET_FIELD: auth0Secret
 
   iamRoleStatements:

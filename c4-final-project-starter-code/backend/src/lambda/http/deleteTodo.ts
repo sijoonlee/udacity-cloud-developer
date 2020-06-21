@@ -5,7 +5,7 @@ import { deleteTodoById } from '../../businessLogic/Todos'
 
 export const handler: APIGatewayProxyHandler = async (event: APIGatewayProxyEvent): Promise<APIGatewayProxyResult> => {
   
-  const deleteTodoRequest: DeleteTodoRequest = JSON.parse(event.body)
+  const deleteTodoRequest:DeleteTodoRequest = { todoId : event.pathParameters.todoId }
   const authorization = event.headers.Authorization
   const split = authorization.split(' ')
   const jwtToken = split[1]

@@ -5,6 +5,7 @@ import * as AWS  from 'aws-sdk'
 
 import { TodoItem } from '../models/TodoItem'
 import { TodoUpdate } from '../models/TodoUpdate'
+import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 
 export class TodoAccess {
 
@@ -17,7 +18,7 @@ export class TodoAccess {
   async getTodosByUserId(userId:String): Promise<TodoItem[]> {
     console.log('Getting Todos by user id')
 
-    const result = await this.docClient.query({ // IAM permission - dynamodb:Scan
+    const result = await this.docClient.query({ // IAM permission - dynamodb:Query
       TableName: this.todoTable,
       IndexName: this.userIdIndex,
       KeyConditionExpression: "userId = :userId",
@@ -39,24 +40,24 @@ export class TodoAccess {
     return todoItem
   }
 
-  async updateTodoById(updateItem: TodoUpdate, todoId:string, userId:string): Promise<TodoUpdate> {
+  async updateTodoById(updatedItem:UpdateTodoRequest, userId:string): Promise<TodoUpdate> {
     await this.docClient.update({ // IAM permission - dynamodb:UpdateItem
       TableName: this.todoTable,
       Key:{
-        todoId: todoId
+        todoId: updatedItem.todoId
       },
       UpdateExpression: "set todoName = :todoName, dueDate = :dueDate, done = :done",
-      ConditionExpression: "userId = :userid",
+      ConditionExpression: "userId = :userId",
       ExpressionAttributeValues: { 
-        ":todoName": updateItem.todoName,
-        ":dueDate": updateItem.dueDate,
-        ":done": updateItem.done,
+        ":todoName": updatedItem.todoName,
+        ":dueDate": updatedItem.dueDate,
+        ":done": updatedItem.done,
         ":userId": userId
       },
       ReturnValues:"UPDATED_NEW"
     }).promise()
 
-    return updateItem
+    return updatedItem
   }
 
   async deleteTodoById(todoId: string, userId: string): Promise<string> {
