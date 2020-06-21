@@ -7,7 +7,7 @@ import { JwtPayload } from '../../auth/JwtPayload'
 import * as AWS  from 'aws-sdk'
 
 const client = new AWS.SecretsManager();
-let cachedSecret: string;
+//let cachedSecret: string;
 
 const secretId = process.env.AUTH_0_SECRET_ID
 const secretField = process.env.AUTH_0_SECRET_FIELD
@@ -94,7 +94,7 @@ decode(token, { complete: true })
 }
 
 async function getSecret(): Promise<Object> {
-  if(cachedSecret) return cachedSecret;
+  //if(cachedSecret) return cachedSecret;
 
   const data = await client
     .getSecretValue({
@@ -102,9 +102,9 @@ async function getSecret(): Promise<Object> {
     })
     .promise()
 
-  cachedSecret = data.SecretString
-
-  return JSON.parse(cachedSecret)
+  //cachedSecret = data.SecretString
+  //return JSON.parse(cachedSecret)
+  return JSON.parse(data.SecretString)
 }
 
 function getToken(authHeader: string): string {
