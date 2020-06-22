@@ -1,5 +1,6 @@
 ## Please note this
-I've got error messages that "name" is reserved word  
+I've got error messages about the reserved word 'word' was used
+Maybe I did something wrong, but I changed a variable name  
 So in both front-end and back-end,  
 I am using **"todoName"** instead of "name"  
 For example, 
