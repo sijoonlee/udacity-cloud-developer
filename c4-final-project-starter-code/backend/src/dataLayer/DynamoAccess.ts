@@ -1,7 +1,7 @@
 import { DocumentClient } from 'aws-sdk/clients/dynamodb'
-import * as AWS  from 'aws-sdk'
-// import * as AWSXRay from 'aws-xray-sdk'
-// const XAWS = AWSXRay.captureAWS(AWS)
+import * as _AWS  from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
+const AWS = AWSXRay.captureAWS(_AWS)
 
 import { TodoItem } from '../types/TodoItem'
 import { CreateRequestToDynamo } from '../types/CreateRequestToDyanmo'

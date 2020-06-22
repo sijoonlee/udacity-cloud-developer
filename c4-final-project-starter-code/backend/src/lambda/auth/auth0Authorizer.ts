@@ -4,7 +4,9 @@ import 'source-map-support/register'
 import { verify } from 'jsonwebtoken'
 import { createLogger } from '../../utils/logger'
 import { JwtPayload } from '../../auth/JwtPayload'
-import * as AWS  from 'aws-sdk'
+import * as _AWS  from 'aws-sdk'
+import * as AWSXRay from 'aws-xray-sdk'
+const AWS = AWSXRay.captureAWS(_AWS)
 
 const client = new AWS.SecretsManager();
 //let cachedSecret: string;
