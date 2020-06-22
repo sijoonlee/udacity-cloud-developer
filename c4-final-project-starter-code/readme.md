@@ -55,7 +55,7 @@ https://y5n5pn5wg7.execute-api.ca-central-1.amazonaws.com/dev
 - Application has sufficient monitoring
     - Yes, check [Winston logging @ authorizer](https://github.com/sijoonlee/udacity-cloud-developer/blob/master/c4-final-project-starter-code/backend/src/lambda/auth/auth0Authorizer.ts)
 - HTTP requests are validated
-    - serverless-reqvalidator-plugin used in [serverless.yml](https://github.com/sijoonlee/udacity-cloud-developer/blob/master/c4-final-project-starter-code/backend/serverless.yml)
+    -  request validation in API Gateway used in [serverless.yml](https://github.com/sijoonlee/udacity-cloud-developer/blob/master/c4-final-project-starter-code/backend/serverless.yml)
 
 ### Architecture
 - Data is stored in a table with a composite key
