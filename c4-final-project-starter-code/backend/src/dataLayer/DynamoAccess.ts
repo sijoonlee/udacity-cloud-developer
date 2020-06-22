@@ -3,9 +3,13 @@ import * as AWS  from 'aws-sdk'
 // import * as AWSXRay from 'aws-xray-sdk'
 // const XAWS = AWSXRay.captureAWS(AWS)
 
-import { TodoItem } from '../models/TodoItem'
-import { TodoUpdate } from '../models/TodoUpdate'
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
+import { TodoItem } from '../types/TodoItem'
+import { CreateRequestToDynamo } from '../types/CreateRequestToDyanmo'
+import { GetRequestToDynamo } from '../types/GetRequestToDynamo'
+import { UpdateRequestToDynamo } from '../types/UpdateRequestToDynamo'
+import { DeleteRequestToDynamo } from '../types/DeleteRequestToDynamo'
+import { AttachmentUrlUpdateRequestToDynamo } from '../types/AttachmentUrlUpdateRequestToDynamo'
+
 
 export class TodoAccess {
 
@@ -15,7 +19,7 @@ export class TodoAccess {
     private readonly userIdIndex = process.env.USER_ID_INDEX) {
   }
 
-  async getTodosByUserId(userId:String): Promise<TodoItem[]> {
+  async getTodosByUserId(param: GetRequestToDynamo): Promise<TodoItem[]> {
     console.log('Getting Todos by user id')
 
     const result = await this.docClient.query({ // IAM permission - dynamodb:Query
@@ -23,7 +27,7 @@ export class TodoAccess {
       IndexName: this.userIdIndex,
       KeyConditionExpression: "userId = :userId",
       ExpressionAttributeValues:{
-        ":userId":userId
+        ":userId":param.userId
       }
     }).promise()
 
@@ -31,48 +35,67 @@ export class TodoAccess {
     return items as TodoItem[]
   }
 
-  async createTodo(todoItem: TodoItem): Promise<TodoItem> {
+  async createTodo(param: CreateRequestToDynamo): Promise<TodoItem> {
     await this.docClient.put({ // IAM permission - dynamodb:PutItem
       TableName: this.todoTable,
-      Item: todoItem
+      Item: param
     }).promise()
 
-    return todoItem
+    return param
   }
 
-  async updateTodoById(updatedItem:UpdateTodoRequest, userId:string): Promise<TodoUpdate> {
+  async updateTodoById(param:UpdateRequestToDynamo): Promise<TodoItem> {
     await this.docClient.update({ // IAM permission - dynamodb:UpdateItem
       TableName: this.todoTable,
       Key:{
-        todoId: updatedItem.todoId
+        todoId: param.todoId
       },
       UpdateExpression: "set todoName = :todoName, dueDate = :dueDate, done = :done",
       ConditionExpression: "userId = :userId",
       ExpressionAttributeValues: { 
-        ":todoName": updatedItem.todoName,
-        ":dueDate": updatedItem.dueDate,
-        ":done": updatedItem.done,
-        ":userId": userId
+        ":todoName": param.todoName,
+        ":dueDate": param.dueDate,
+        ":done": param.done,
+        ":userId": param.userId
       },
       ReturnValues:"UPDATED_NEW"
     }).promise()
 
-    return updatedItem
+    return param
   }
 
-  async deleteTodoById(todoId: string, userId: string): Promise<string> {
+  async updateAttachmentUrlById(param: AttachmentUrlUpdateRequestToDynamo): Promise<TodoItem> {
+    await this.docClient.update({ // IAM permission - dynamodb:UpdateItem
+      TableName: this.todoTable,
+      Key:{
+        todoId: param.todoId
+      },
+      UpdateExpression: "set attachmentUrl = :attachmentUrl",
+      ConditionExpression: "userId = :userId",
+      ExpressionAttributeValues: { 
+        ":attachmentUrl": param.attachmentUrl,
+        ":userId": param.userId
+      },
+      ReturnValues:"UPDATED_NEW"
+    }).promise()
+
+    return param
+  }
+
+
+  async deleteTodoById(param: DeleteRequestToDynamo): Promise<TodoItem> {
 
     await this.docClient.delete({ // IAM permission - dynamodb:DeleteItem
       TableName: this.todoTable,
       Key:{
-        todoId:todoId
+        todoId: param.todoId
       },
       ConditionExpression: "userId = :userId",
       ExpressionAttributeValues:{
-        ":userId" : userId
+        ":userId" : param.userId
       }
     }).promise()
-    return todoId
+    return param
   }
 }
 

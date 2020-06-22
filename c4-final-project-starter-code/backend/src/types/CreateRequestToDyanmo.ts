@@ -1,4 +1,4 @@
-export interface TodoItem {
+export interface CreateRequestToDynamo {
   userId: string
   todoId: string
   createdAt: string

@@ -1,17 +1,18 @@
 import * as uuid from 'uuid'
 
-import { TodoItem } from '../models/TodoItem'
-import { TodoUpdate } from '../models/TodoUpdate'
 import { TodoAccess } from '../dataLayer/DynamoAccess'
-import { CreateTodoRequest } from '../requests/CreateTodoRequest'
-import { DeleteTodoRequest } from '../requests/DeleteTodoRequest'
-import { UpdateTodoRequest } from '../requests/UpdateTodoRequest'
 import { parseUserId } from '../auth/utils'
+
+import { TodoItem } from '../types/TodoItem'
+import { CreateRequest } from '../types/CreateRequest'
+import { UpdateRequest } from '../types/UpdateRequest'
+import { DeleteRequest } from '../types/DeleteRequest'
+
 
 const todoAccess = new TodoAccess()
 
 export async function createTodo( 
-  createTodoRequest: CreateTodoRequest, jwtToken: string): Promise<TodoItem> {
+  createRequest: CreateRequest, jwtToken: string): Promise<TodoItem> {
 
   const todoId = uuid.v4()
   const userId = parseUserId(jwtToken)
@@ -20,27 +21,32 @@ export async function createTodo(
     userId: userId,
     todoId: todoId,
     createdAt: new Date().toISOString(),
-    todoName: createTodoRequest.todoName,
-    dueDate: createTodoRequest.dueDate,
-    done: false
+    done: false,
+    ...createRequest
   })
 }
 
 export async function getTodosByUserId(jwtToken: string): Promise<TodoItem[]> {
   const userId = parseUserId(jwtToken)
-  return await todoAccess.getTodosByUserId(userId)
+  return await todoAccess.getTodosByUserId({userId})
 }
 
 export async function updateTodoById(
-  updateTodoRequest: UpdateTodoRequest, jwtToken:string): Promise<TodoUpdate> {
+  updateRequest: UpdateRequest, jwtToken:string): Promise<TodoItem> {
   
   const userId = parseUserId(jwtToken)
-  return await todoAccess.updateTodoById(updateTodoRequest, userId)
+  return await todoAccess.updateTodoById({userId, ...updateRequest})
 }
 
 export async function deleteTodoById(
-  deleteTodoRequest: DeleteTodoRequest, jwtToken: string): Promise<string> {
+  deleteRequest: DeleteRequest, jwtToken: string): Promise<TodoItem> {
   
   const userId = parseUserId(jwtToken)
-  return await todoAccess.deleteTodoById(deleteTodoRequest.todoId, userId)
+  return await todoAccess.deleteTodoById({userId, ...deleteRequest})
+}
+
+export async function updateAttachmentUrlById(
+  todoId: string, attachmentUrl: string, jwtToken: string): Promise<TodoItem> {
+  const userId = parseUserId(jwtToken)
+  return await todoAccess.updateAttachmentUrlById({userId, todoId, attachmentUrl})
 }
