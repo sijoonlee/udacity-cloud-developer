@@ -1,5 +1,5 @@
 service:
-  name: sls-todo-app
+  name: note-app
 
 plugins:
   - serverless-webpack
@@ -21,11 +21,10 @@ provider:
 
   environment:
     TODOS_TABLE: Todos-${self:provider.stage}
+    IMAGE_TABLE: Image-${self:provider.stage}
     USER_ID_INDEX: UserIdIndex
-    IMAGES_S3_BUCKET: sijoonlee-serverless-todos-images-${self:provider.stage}
+    IMAGES_S3_BUCKET: sijoonlee-noteapp-images-${self:provider.stage}
     SIGNED_URL_EXPIRATION: 300
-    AUTH_0_SECRET_ID: Auth0Secret-TodoApp-test20-${self:provider.stage}
-    AUTH_0_SECRET_FIELD: auth0Secret
 
   iamRoleStatements:
     - Effect: Allow
@@ -33,14 +32,6 @@ provider:
         - codedeploy:*
       Resource:
         - '*'
-    - Effect: Allow
-      Action:
-        - secretsmanager:GetSecretValue
-      Resource: !Ref Auth0Secret
-    - Effect: Allow
-      Action:
-        - kms:Decrypt
-      Resource: !GetAtt KMSKey.Arn
     - Effect: Allow
       Action:
         - xray:PutTraceSegments
@@ -53,11 +44,11 @@ functions:
     handler: src/lambda/auth/auth0Authorizer.handler
 
   GetTodos:
-    handler: src/lambda/http/getTodos.handler
+    handler: src/lambda/http/getMemos.handler
     events:
       - http:
           method: get
-          path: todos
+          path: memo
           cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
@@ -76,7 +67,7 @@ functions:
     events:
       - http:
           method: post
-          path: todos
+          path: memo
           cors: true
           authorizer: Auth
           request:
@@ -94,7 +85,7 @@ functions:
     events:
       - http:
           method: patch
-          path: todos/{todoId}
+          path: memo/{id}
           cors: true
           authorizer: Auth
           request:
@@ -112,7 +103,7 @@ functions:
     events:
       - http:
           method: delete
-          path: todos/{todoId}
+          path: memo/{id}
           cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
@@ -126,8 +117,8 @@ functions:
     handler: src/lambda/http/generateUploadUrl.handler
     events:
       - http:
-          method: post
-          path: todos/{todoId}/attachment
+          method: get
+          path: memo/attachment
           cors: true
           authorizer: Auth
     iamRoleStatementsInherit: true
@@ -138,8 +129,23 @@ functions:
         Resource: arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*
       - Effect: Allow
         Action:
-          - dynamodb:UpdateItem
-        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.TODOS_TABLE}    
+          - dynamodb:PutItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGE_TABLE}    
+
+  GetImageUrl:
+    handler: src/lambda/http/getImageUrl.handler
+    events:
+      - http:
+          method: get
+          path: memo/imageUrl
+          cors: true
+          authorizer: Auth
+    iamRoleStatementsInherit: true
+    iamRoleStatements:
+      - Effect: Allow
+        Action:
+          - dynamodb:GetItem
+        Resource: arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.IMAGE_TABLE}
 
 resources:
   Resources:
@@ -158,12 +164,12 @@ resources:
       Type: AWS::DynamoDB::Table
       Properties:
         AttributeDefinitions:
-          - AttributeName: todoId
+          - AttributeName: id
             AttributeType: S
           - AttributeName: userId
             AttributeType: S
         KeySchema:
-          - AttributeName: todoId
+          - AttributeName: id
             KeyType: HASH
         BillingMode: PAY_PER_REQUEST
         TableName: ${self:provider.environment.TODOS_TABLE}
@@ -172,10 +178,22 @@ resources:
             KeySchema:
             - AttributeName: userId
               KeyType: HASH
-            - AttributeName: todoId
+            - AttributeName: id
               KeyType: RANGE
             Projection:
               ProjectionType: ALL
+
+    ImageDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        AttributeDefinitions:
+          - AttributeName: userId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: userId
+            KeyType: HASH
+        BillingMode: PAY_PER_REQUEST
+        TableName: ${self:provider.environment.IMAGE_TABLE}
 
     AttachmentsBucket:
       Type: AWS::S3::Bucket
@@ -210,36 +228,3 @@ resources:
               Resource: 'arn:aws:s3:::${self:provider.environment.IMAGES_S3_BUCKET}/*'
         Bucket: !Ref AttachmentsBucket
 
-    KMSKey:
-      Type: AWS::KMS::Key
-      Properties:
-        Description: KMS key to encrypt Auth0 secret
-        KeyPolicy:
-          Version: '2012-10-17'
-          Id: key-default-1
-          Statement:
-            - Sid: Allow administration of the key
-              Effect: Allow
-              Principal:
-                AWS:
-                  Fn::Join:
-                  - ':'
-                  - - 'arn:aws:iam:'
-                    - Ref: AWS::AccountId
-                    - 'root'
-              Action:
-                - 'kms:*'
-              Resource: '*'
-
-    KMSKeyAlias:
-      Type: AWS::KMS::Alias
-      Properties:
-        AliasName: alias/auth0Key-${self:provider.stage}
-        TargetKeyId: !Ref KMSKey
-
-    Auth0Secret:
-      Type: AWS::SecretsManager::Secret
-      Properties:
-        Name: ${self:provider.environment.AUTH_0_SECRET_ID}
-        Description: Auth0 secret
-        KmsKeyId: !Ref KMSKey

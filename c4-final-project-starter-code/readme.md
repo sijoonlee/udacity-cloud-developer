@@ -16,7 +16,7 @@ export interface Todo {
 ```
 
 ## Backend API Address
-https://y5n5pn5wg7.execute-api.ca-central-1.amazonaws.com/dev  
+https://2135u40867.execute-api.ca-central-1.amazonaws.com/dev/  
 
 
 ## Rubric Checklist
@@ -62,3 +62,46 @@ https://y5n5pn5wg7.execute-api.ca-central-1.amazonaws.com/dev
     - Primary Key(todoId) & Global Secondary Index Key(userId)
 - Scan operation is not used to read data from a database
     - Query is being used
+
+
+### Request body validator
+
+I have to add "pattern" key in json model file
+It's now working properly to prevent empty string
+- the Regex pattern that represents non-empty string
+    ```
+    ^(?!\s*$).+ 
+    ```
+-  after adding escape character
+    ```
+    ^(?!\\s*$).+
+    ```
+- create-todo-request.json file
+    ```
+    {
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "title": "todo",
+    "type": "object",
+    "properties": {
+        "todoName": {
+        "type": "string",
+        "pattern": "^(?!\\s*$).+"
+        },
+        "dueDate": {
+        "type": "string",
+        "pattern": "^(?!\\s*$).+"
+        }
+    },
+    "required": [
+        "todoName",
+        "dueDate"
+    ],
+    "additionalProperties": false
+    }
+    ```
+
+- reference
+https://www.serverless.com/framework/docs/providers/aws/events/apigateway/  
+https://stackoverflow.com/questions/3085539regular-expression-for-anything-but-an-empty-string  
+https://stackoverflow.com/questions/25426464/regex-pattern-in-json  
+

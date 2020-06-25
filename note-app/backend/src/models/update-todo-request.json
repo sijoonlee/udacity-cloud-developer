@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "New Memo",
+  "type": "object",
+  "properties": {
+    "title": {
+      "type": "string"
+    },
+    "body": {
+      "type": "string"
+    },
+    "posX": {
+      "type": "integer"
+    },
+    "posY": {
+      "type": "integer"
+    },
+    "width": {
+      "type": "integer"
+    },
+    "height": {
+      "type": "integer"
+    },
+    "isHidden":{
+      "type": "boolean"
+    },
+    "isDeleted":{
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "title","body","posX","posY","width","height","isHidden","isDeleted"
+  ],
+  "additionalProperties": false
+}

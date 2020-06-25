@@ -41,3 +41,7 @@
 - add two plugins in serverless.yml
   - serverless-reqvalidator-plugin
   - serverless-aws-documentation
+  
+  
+# NODE_OPTIONS="--max-old-space-size=4096" sls deploy -v
+
