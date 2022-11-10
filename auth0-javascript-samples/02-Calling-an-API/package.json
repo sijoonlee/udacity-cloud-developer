@@ -9,7 +9,7 @@
     "helmet": "^3.21.0",
     "jwks-rsa": "^1.6.0",
     "morgan": "^1.9.1",
-    "serve": "^10.1.2"
+    "serve": "^14.1.1"
   },
   "devDependencies": {
     "live-server": "^1.2.1",
